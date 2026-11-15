@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Runtime
+.pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+.coverage/
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker volumes (local only)
+volumes/
+postgres_data/
+redis_data/
+minio_data/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Misc
+*.tmp
+*.temp
+dist/
+build/

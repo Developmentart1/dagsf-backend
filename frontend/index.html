@@ -1,24 +1,860 @@
-<!doctype html>
-<html lang="es-MX">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DAG SF - Frontend</title>
-  <style>
-    body { font-family: system-ui, -apple-system, sans-serif; margin: 0; display: grid; place-items: center; min-height: 100vh; background: #0f172a; color: #e2e8f0; }
-    main { text-align: center; padding: 2rem; }
-    h1 { font-size: 1.5rem; margin: 0 0 .5rem; }
-    p { color: #94a3b8; margin: .25rem 0; }
-    code { background: #1e293b; padding: .15rem .4rem; border-radius: .25rem; }
-    a { color: #38bdf8; }
-  </style>
-</head>
-<body>
-  <main>
-    <h1>DAG SF &mdash; frontend listo para conectar</h1>
-    <p>Coloca aqui los micrositios de DAG Soluciones Financieras.</p>
-    <p>API: <code>/api</code> &middot; Admin: <code>/admin</code> &middot; Salud: <code>/api/health</code></p>
-    <p><a href="/api/health">Probar backend</a></p>
-  </main>
-</body>
-</html>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>DAG Soluciones Financieras</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+
+<style>
+/* DAG SF — Hub. Una sola apariencia, deliberada: papel, tinta y campos planos de color. */
+:root{
+  --paper:#EFECE5; --white:#FBFAF7; --ink:#0A1A1E; --teal:#11363F; --sea:#A9C0BC;
+  --orange:#FC4E05; --blue:#3F94C9; --mute:#56676A;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --serif:"Instrument Serif",Georgia,serif;
+  --gut:clamp(20px,4.2vw,60px);
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--display);font-size:17px;line-height:1.5;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+::selection{background:var(--orange);color:var(--ink)}
+:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+
+.wrap{padding-left:max(var(--gut),env(safe-area-inset-left,0px));padding-right:max(var(--gut),env(safe-area-inset-right,0px));max-width:1560px;margin-inline:auto}
+
+/* Campos de color */
+.f{background:var(--bg);color:var(--fg);--line:color-mix(in srgb,var(--fg) 22%,transparent);--soft:color-mix(in srgb,var(--fg) 68%,transparent)}
+.f-paper{--bg:var(--paper);--fg:var(--ink)}
+.f-white{--bg:var(--white);--fg:var(--ink)}
+.f-ink{--bg:var(--ink);--fg:var(--paper)}
+.f-teal{--bg:var(--teal);--fg:var(--paper)}
+.f-orange{--bg:var(--orange);--fg:var(--ink)}
+.f-sea{--bg:var(--sea);--fg:var(--ink)}
+.band{padding-block:clamp(64px,9vw,140px)}
+
+/* Tipografía */
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+.h-xl,.h-l,.h-m,.h-s{font-weight:800;font-stretch:88%;letter-spacing:-.025em;line-height:.94;text-wrap:balance}
+.h-xl{font-size:clamp(40px,11.2vw,158px);letter-spacing:-.035em;line-height:.9}
+.h-l{font-size:clamp(36px,6.4vw,96px)}
+.h-m{font-size:clamp(28px,3.6vw,54px);line-height:1}
+.h-s{font-size:clamp(21px,2vw,28px);line-height:1.08;letter-spacing:-.015em}
+.lead{font-size:clamp(18px,1.55vw,22px);line-height:1.35;max-width:36ch}
+.body{color:var(--soft);max-width:62ch}
+em.s{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em;font-stretch:100%}
+.dot{color:var(--orange)}
+.f-orange .dot{color:var(--paper)}
+
+/* Botones — rectángulo duro, sombra desplazada */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 22px;border:2px solid var(--fg,var(--ink));background:transparent;color:inherit;text-decoration:none;font-weight:700;font-size:15px;letter-spacing:-.005em;line-height:1;transition:transform .15s,box-shadow .15s,background .15s,color .15s}
+.btn:hover{background:var(--fg,var(--ink));color:var(--bg,var(--paper))}
+.btn-solid{background:var(--orange);color:var(--ink);border-color:var(--ink);box-shadow:5px 5px 0 var(--ink)}
+.f-ink .btn-solid,.f-teal .btn-solid{box-shadow:5px 5px 0 var(--paper);border-color:var(--paper)}
+.f-orange .btn-solid{background:var(--ink);color:var(--paper)}
+.btn-solid:hover{background:var(--orange);color:var(--ink);transform:translate(3px,3px);box-shadow:2px 2px 0 var(--ink)}
+.f-ink .btn-solid:hover,.f-teal .btn-solid:hover{box-shadow:2px 2px 0 var(--paper)}
+.f-orange .btn-solid:hover{background:var(--ink);color:var(--paper)}
+.btn .ar{font-family:var(--mono);font-weight:400}
+.row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.tag{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1.5px solid currentColor;padding:3px 8px;line-height:1.3}
+.tag-pend{background:var(--orange);color:var(--ink);border-color:var(--ink)}
+
+/* NAV */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--paper)}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--paper);border-bottom:2px solid var(--ink)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:68px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
+.logo svg{width:30px;height:26px;flex:none}
+.logo b{font-weight:900;font-size:22px;letter-spacing:-.03em;line-height:1}
+.logo span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;line-height:1.25;border-left:2px solid var(--ink);padding-left:12px}
+.nav ul{display:flex;gap:clamp(14px,1.7vw,28px);list-style:none;align-items:center}
+.nav ul a{text-decoration:none;font-weight:600;font-size:14.5px;padding:6px 0;border-bottom:3px solid transparent}
+.nav ul a:hover,.nav ul a[aria-current]{border-bottom-color:var(--orange)}
+.nav .btn{padding:11px 16px;font-size:14px}
+.burger{display:none;border:2px solid var(--ink);background:var(--paper);padding:9px 12px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+@media (max-width:1120px){
+  .burger{display:block}
+  .nav ul{display:none;position:fixed;inset:calc(70px + env(safe-area-inset-top,0px)) 0 0 0;background:var(--ink);color:var(--paper);flex-direction:column;align-items:flex-start;gap:0;padding:24px max(var(--gut),env(safe-area-inset-left,0px)) calc(40px + env(safe-area-inset-bottom,0px));overflow:auto}
+  .nav.open ul{display:flex}
+  .nav ul li{width:100%;border-bottom:1px solid rgba(239,236,229,.2)}
+  .nav ul a{display:block;font-size:clamp(28px,8vw,44px);font-weight:800;font-stretch:88%;letter-spacing:-.03em;padding:12px 0;border:0}
+  .nav ul .btn{border:0;padding:12px 0;color:var(--orange);background:none}
+}
+
+/* Vistas */
+.view[hidden]{display:none}
+.phead{padding-block:clamp(48px,7vw,110px) clamp(40px,5vw,72px);border-bottom:2px solid var(--fg)}
+.phead .mono{display:flex;gap:14px;margin-bottom:clamp(20px,3vw,40px)}
+.phead .lead{margin-top:clamp(20px,2.6vw,36px);max-width:44ch}
+.shead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:24px 40px;margin-bottom:clamp(32px,5vw,72px);align-items:start}
+.shead .mono{padding-top:10px;border-top:2px solid var(--fg)}
+@media (max-width:760px){.shead{grid-template-columns:1fr}}
+
+/* HERO */
+.hero{padding-block:clamp(36px,5vw,72px) 0}
+.hero h1 .x{position:relative;white-space:nowrap}
+.hero h1 .x::after{content:"";position:absolute;left:-2%;top:54%;height:.11em;width:104%;background:var(--orange);transform-origin:left;transform:scaleX(1)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:40px;margin-top:clamp(28px,4vw,56px);align-items:end}
+.hero-copy{padding-bottom:clamp(28px,4vw,56px);display:grid;gap:26px}
+.bars{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(6px,1vw,14px);height:clamp(300px,30vw,400px);align-items:end}
+.bar{position:relative;display:flex;flex-direction:column;justify-content:space-between;height:var(--h);min-width:0;padding:12px clamp(8px,1vw,14px);text-decoration:none;background:var(--c);color:var(--t);border:2px solid var(--ink);border-bottom:0;transform-origin:bottom;transition:filter .2s}
+.bar:hover{filter:brightness(1.08)}
+.bar .mono{font-size:11px}
+.bar b{font-weight:800;font-stretch:80%;font-size:clamp(15px,1.7vw,24px);letter-spacing:-.02em;line-height:1;white-space:nowrap;writing-mode:vertical-rl;transform:rotate(180deg);align-self:flex-start}
+@media (max-width:860px){
+  .hero-grid{grid-template-columns:1fr;gap:8px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .js .bar{animation:grow .8s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*90ms + 150ms)}
+  .js .hero h1 .x::after{animation:strike .7s .9s cubic-bezier(.7,0,.2,1) both}
+  .js .rv{opacity:0;transform:translateY(22px);transition:opacity .6s,transform .6s}
+  .js .rv.in{opacity:1;transform:none}
+}
+@keyframes grow{from{transform:scaleY(0)}}
+@keyframes strike{from{transform:scaleX(0)}}
+
+/* MANIFIESTO */
+.fear p{font-weight:800;font-stretch:88%;font-size:clamp(30px,6.6vw,104px);letter-spacing:-.03em;line-height:1;padding-block:clamp(10px,1.4vw,20px);border-bottom:1px solid var(--line)}
+.fear p span{position:relative;white-space:nowrap}
+.fear p span::after{content:"";position:absolute;left:-3%;top:55%;height:.1em;width:106%;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.7,0,.2,1) var(--d,0s)}
+.fear.in p span::after{transform:scaleX(1)}
+.peace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:24px 40px;margin-top:clamp(40px,6vw,90px)}
+.peace blockquote{font-family:var(--serif);font-style:italic;font-size:clamp(28px,4.2vw,64px);line-height:1.05;letter-spacing:-.01em}
+.peace small{display:block;margin-top:22px;font-family:var(--display);font-style:normal;font-size:16px;color:var(--soft);max-width:52ch;line-height:1.5}
+@media (max-width:760px){.peace{grid-template-columns:1fr}}
+
+/* DOS UNIDADES */
+.duo{display:grid;grid-template-columns:1fr 1fr;border-block:2px solid var(--ink)}
+.duo a{display:grid;grid-template-rows:auto 1fr auto;gap:28px;min-height:clamp(420px,46vw,640px);padding:clamp(28px,4vw,60px) max(var(--gut),env(safe-area-inset-right,0px)) clamp(28px,4vw,60px) max(var(--gut),env(safe-area-inset-left,0px));text-decoration:none;position:relative;overflow:hidden}
+.duo a+a{border-left:2px solid var(--ink)}
+.duo .num{font-weight:900;font-stretch:70%;font-size:clamp(120px,22vw,340px);line-height:.74;letter-spacing:-.05em;position:absolute;right:-.04em;bottom:-.06em;opacity:.16;pointer-events:none;transition:opacity .3s,transform .4s}
+.duo a:hover .num{opacity:.3;transform:translateY(-10px)}
+.duo ul{list-style:none;display:grid;gap:0;align-self:end;max-width:30ch;position:relative}
+.duo li{padding:9px 0;border-top:1px solid var(--line);font-weight:600;font-size:16px}
+.duo .go{display:flex;align-items:center;gap:12px;font-weight:800;font-size:18px;position:relative}
+.duo .go i{display:inline-grid;place-items:center;width:44px;height:44px;border:2px solid currentColor;font-style:normal;font-family:var(--mono);transition:transform .2s}
+.duo a:hover .go i{transform:translateX(8px)}
+@media (max-width:820px){.duo{grid-template-columns:1fr}.duo a+a{border-left:0;border-top:2px solid var(--ink)}}
+
+/* TABLA TERCERO NEUTRAL */
+.tri{border-top:2px solid var(--fg)}
+.tri>div{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto minmax(0,1fr);gap:8px 20px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--line)}
+.tri .k{font-weight:800;font-stretch:88%;font-size:clamp(18px,2vw,28px);letter-spacing:-.02em;line-height:1.05}
+.tri .a,.tri .b{font-size:16px}
+.tri .b{text-align:right}
+.tri .m{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;background:var(--fg);color:var(--bg);padding:4px 9px;white-space:nowrap}
+.tri .hd{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+@media (max-width:700px){.tri>div{grid-template-columns:1fr auto 1fr}.tri .k{grid-column:1/-1}.tri .hd.k{display:none}}
+
+/* FASES */
+.steps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-top:2px solid var(--fg)}
+.steps>div{padding:18px 16px 8px 0;border-right:1px solid var(--line);padding-left:16px;min-width:0}
+.steps>div:first-child{padding-left:0}
+.steps>div:last-child{border-right:0}
+.steps b{display:block;font-weight:900;font-stretch:75%;font-size:clamp(44px,5vw,76px);line-height:.9;letter-spacing:-.04em}
+.steps h3{font-size:17px;font-weight:800;letter-spacing:-.01em;line-height:1.1;margin:14px 0 8px}
+.steps p{font-size:14px;color:var(--soft);line-height:1.4}
+.steps .mono{font-size:10.5px;margin-top:12px;display:block}
+@media (max-width:1000px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.steps>div{border-bottom:1px solid var(--line);padding:18px 14px 18px 0}.steps>div:nth-child(even){border-right:0;padding-left:14px}.steps>div:nth-child(odd){padding-left:0}}
+
+/* FILAS GENÉRICAS */
+.rows{border-top:2px solid var(--fg)}
+.rows>*{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:8px 40px;padding:20px 0;border-bottom:1px solid var(--line)}
+.rows h3{font-weight:800;font-stretch:88%;font-size:clamp(20px,2.2vw,30px);letter-spacing:-.02em;line-height:1.05}
+.rows p,.rows dd{color:var(--soft);font-size:16px;max-width:64ch}
+.rows .mono{color:var(--soft)}
+@media (max-width:700px){.rows>*{grid-template-columns:1fr}}
+
+/* PRODUCTOS */
+.prod{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,4fr) minmax(0,3fr);gap:24px 40px;padding-block:clamp(32px,4.5vw,64px);border-bottom:2px solid var(--fg)}
+.prod .n{font-family:var(--mono);font-size:12px;letter-spacing:.08em;margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.prod blockquote{font-weight:800;font-stretch:88%;font-size:clamp(26px,3.1vw,46px);letter-spacing:-.025em;line-height:1;text-wrap:balance}
+.prod h3{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;margin-top:18px;color:var(--soft)}
+.prod .what p{font-size:16.5px;margin-bottom:12px}
+.prod .what p.sm{font-size:14.5px;color:var(--soft)}
+.side{border:2px solid var(--fg);align-self:start}
+.side>div{padding:12px 14px;border-bottom:1px solid var(--line);font-size:14.5px}
+.side>div:last-child{border-bottom:0}
+.side .mono{display:block;font-size:10.5px;color:var(--soft);margin-bottom:3px}
+.side .mid{background:var(--fg);color:var(--bg);font-weight:800;text-align:center;letter-spacing:-.01em}
+@media (max-width:980px){.prod{grid-template-columns:1fr}}
+.open-door{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:28px 40px;align-items:end}
+@media (max-width:760px){.open-door{grid-template-columns:1fr}}
+
+/* REQUISITOS / LISTAS EN DOS COLUMNAS */
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.cols2 h3{margin-bottom:14px}
+.ticks{list-style:none;border-top:2px solid var(--fg)}
+.ticks li{padding:11px 0 11px 30px;border-bottom:1px solid var(--line);position:relative;font-size:16px}
+.ticks li::before{content:"";position:absolute;left:0;top:17px;width:14px;height:8px;border-left:2.5px solid var(--orange);border-bottom:2.5px solid var(--orange);transform:rotate(-45deg);transform-origin:left bottom;translate:4px -2px}
+.f-orange .ticks li::before{border-color:var(--ink)}
+@media (max-width:760px){.cols2{grid-template-columns:1fr}}
+
+/* BLOG */
+.posts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:2px solid var(--fg);border-left:1px solid var(--line)}
+.post{display:grid;grid-template-rows:auto auto 1fr auto;gap:18px;padding:22px;min-height:300px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);transition:background .2s,color .2s}
+.post:hover{background:var(--fg);color:var(--bg)}
+.post .mono{display:flex;justify-content:space-between;gap:10px}
+.post h3{font-weight:800;font-stretch:88%;font-size:clamp(22px,2.2vw,32px);letter-spacing:-.025em;line-height:1.02;text-wrap:balance}
+.post p{font-size:14.5px;opacity:.75}
+@media (max-width:980px){.posts{grid-template-columns:1fr 1fr}}
+@media (max-width:620px){.posts{grid-template-columns:1fr}.post{min-height:0}}
+.news{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px 40px;align-items:end}
+.news form{display:flex;gap:0;flex-wrap:wrap}
+.news input{flex:1 1 220px;min-width:0;padding:15px 16px;border:2px solid var(--fg);background:transparent;color:inherit;font:inherit;border-radius:0}
+.news input::placeholder{color:var(--soft)}
+.news button{border-left:0}
+@media (max-width:760px){.news{grid-template-columns:1fr}.news button{border-left:2px solid var(--fg)}}
+
+/* FAQ */
+.faq{border-top:2px solid var(--fg)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px;align-items:baseline;padding:20px 0;cursor:pointer;font-weight:800;font-stretch:88%;font-size:clamp(20px,2.3vw,32px);letter-spacing:-.02em;line-height:1.08}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .mono{color:var(--soft);font-weight:500}
+.faq summary i{font-style:normal;font-family:var(--mono);font-weight:400;font-size:24px;line-height:1;transition:transform .25s}
+.faq details[open] summary i{transform:rotate(45deg);color:var(--orange)}
+.faq details>div{padding:0 0 26px;margin-left:calc(18px + 2.2em);max-width:66ch;color:var(--soft)}
+.faq details>div p+p{margin-top:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.chips button{border:2px solid var(--fg);background:transparent;padding:8px 14px;font-weight:700;font-size:14px}
+.chips button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+@media (max-width:620px){.faq details>div{margin-left:0}}
+
+/* TRANSPARENCIA */
+.legal{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,3fr);gap:28px 40px;padding-block:clamp(36px,5vw,72px);border-bottom:2px solid var(--fg)}
+.legal>h2{position:sticky;top:96px;align-self:start}
+.legal dl{border-top:2px solid var(--fg)}
+.legal dl>div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:6px 28px;padding:14px 0;border-bottom:1px solid var(--line)}
+.legal dt{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);padding-top:3px}
+.legal dd{font-size:16.5px;overflow-wrap:anywhere}
+.legal dd b{font-weight:800}
+.stamp{border:2px solid var(--fg);padding:clamp(18px,2.4vw,30px);font-size:clamp(17px,1.7vw,22px);line-height:1.35;font-weight:600;margin-bottom:24px;box-shadow:7px 7px 0 var(--fg)}
+.arco{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:2px solid var(--fg);margin-block:24px}
+.arco>div{padding:16px;border-right:1px solid var(--line);min-width:0}
+.arco>div:last-child{border-right:0}
+.arco b{display:block;font-weight:900;font-stretch:75%;font-size:clamp(48px,6vw,88px);line-height:.85;letter-spacing:-.04em;color:var(--orange)}
+.arco h3{font-size:16px;font-weight:800;margin:10px 0 4px}
+.arco p{font-size:13.5px;color:var(--soft);line-height:1.35}
+@media (max-width:820px){.legal{grid-template-columns:1fr}.legal>h2{position:static}.arco{grid-template-columns:1fr 1fr}.arco>div:nth-child(2){border-right:0}.arco>div:nth-child(-n+2){border-bottom:1px solid var(--line)}.legal dl>div{grid-template-columns:1fr}}
+
+/* SOCIOS */
+.allies{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:2px solid var(--fg);border-left:1px solid var(--line)}
+.allies>div{padding:20px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-height:190px;display:grid;grid-template-rows:auto 1fr;gap:12px}
+.allies h3{font-weight:800;font-stretch:88%;font-size:clamp(19px,1.8vw,25px);letter-spacing:-.02em;line-height:1.05}
+.allies p{font-size:14px;color:var(--soft);align-self:end}
+@media (max-width:1000px){.allies{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.allies{grid-template-columns:1fr}.allies>div{min-height:0}}
+
+/* EQUIPO */
+.team>div{grid-template-columns:auto minmax(0,2fr) minmax(0,1fr)}
+.team .mono{align-self:center}
+.team h3{font-size:clamp(24px,3.6vw,54px)}
+.team span.r{align-self:center;text-align:right;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+@media (max-width:700px){.team>div{grid-template-columns:auto 1fr}.team span.r{grid-column:2;text-align:left}}
+
+/* CONTACTO */
+.contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,5vw,80px)}
+.wa{display:block;text-decoration:none;border:2px solid var(--fg);padding:clamp(20px,3vw,36px);box-shadow:8px 8px 0 var(--orange);transition:transform .15s,box-shadow .15s}
+.wa:hover{transform:translate(4px,4px);box-shadow:4px 4px 0 var(--orange)}
+.wa b{display:block;font-weight:900;font-stretch:80%;font-size:clamp(30px,4.4vw,64px);letter-spacing:-.03em;line-height:1;margin:10px 0;user-select:all}
+form.cf{display:grid;gap:16px}
+.cf label{display:grid;gap:6px;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase}
+.cf input,.cf select,.cf textarea{font:inherit;font-family:var(--display);font-size:17px;letter-spacing:0;text-transform:none;padding:13px 14px;border:2px solid var(--fg);background:var(--white);color:var(--ink);border-radius:0;width:100%;min-width:0}
+.cf textarea{min-height:110px;resize:vertical}
+.cf .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.note{border:2px dashed var(--fg);padding:16px;font-size:15px}
+.note a{font-weight:800}
+@media (max-width:860px){.contact{grid-template-columns:1fr}.cf .two{grid-template-columns:1fr}}
+
+/* PORTAL */
+.portal{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:clamp(28px,5vw,80px);align-items:start}
+.login{border:2px solid var(--fg);padding:clamp(20px,3vw,34px);display:grid;gap:14px;box-shadow:8px 8px 0 var(--fg)}
+.login .field{border:2px solid var(--line);padding:13px 14px;font-family:var(--mono);font-size:13px;color:var(--soft)}
+@media (max-width:860px){.portal{grid-template-columns:1fr}}
+
+/* ESPACIOS DE IMAGEN — para reemplazar: poner <img src="..." alt="..."> dentro del <figure class="ph"> y borrar el <figcaption> */
+.ph{aspect-ratio:var(--r,16/9);width:100%;max-width:100%;border:2px dashed currentColor;background:repeating-linear-gradient(135deg,transparent 0 13px,color-mix(in srgb,currentColor 16%,transparent) 13px 14px);display:grid;place-items:center;text-align:center;padding:14px;margin:0;overflow:hidden}
+.ph figcaption{display:grid;gap:4px;justify-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;line-height:1.35}
+.ph b{font-family:var(--display);font-weight:800;font-size:clamp(15px,1.6vw,22px);letter-spacing:-.01em;text-transform:none}
+.ph img{width:100%;height:100%;object-fit:cover;grid-area:1/1}
+.ph:has(img){padding:0;border-style:solid;background:none}
+.ph-wide{--r:21/9}
+.ph-band{padding-block:clamp(24px,3vw,44px)}
+.ph-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:28px}
+.ph-logos{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:44px}
+@media (max-width:800px){.ph-wide{--r:4/3}.ph-grid{grid-template-columns:1fr 1fr}.ph-logos{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* CIERRE + FOOTER */
+.closing{padding-block:clamp(72px,11vw,170px)}
+.closing .row{margin-top:clamp(28px,4vw,52px)}
+footer{border-top:2px solid var(--paper)}
+.foot{display:grid;grid-template-columns:minmax(0,2fr) repeat(3,minmax(0,1fr));gap:40px;padding-block:clamp(48px,6vw,84px) 36px}
+.foot h4{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;color:var(--soft);margin-bottom:14px}
+.foot ul{list-style:none;display:grid;gap:8px}
+.foot a{text-decoration:none;font-weight:600;font-size:15px}
+.foot a:hover{color:var(--orange)}
+.foot .logo{color:var(--paper);margin-bottom:20px}
+.foot .logo span{border-color:var(--paper)}
+.fine{font-size:12.5px;line-height:1.5;color:var(--soft);max-width:62ch}
+.fine+.fine{margin-top:10px}
+.base{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-block:18px calc(22px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+@media (max-width:900px){.foot{grid-template-columns:1fr 1fr}.foot>div:first-child{grid-column:1/-1}}
+</style>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="logo" href="#inicio" aria-label="DAG Soluciones Financieras, inicio">
+      <svg viewBox="0 0 32 28" fill="currentColor" aria-hidden="true"><rect x="0" y="20" width="5" height="8"/><rect x="6.75" y="15" width="5" height="13"/><rect x="13.5" y="10" width="5" height="18"/><rect x="20.25" y="5" width="5" height="23"/><rect x="27" y="0" width="5" height="28"/></svg>
+      <b>DAG®</b><span>Soluciones<br>Financieras</span>
+    </a>
+    <ul id="menu">
+      <li><a href="#fideicomisos">Fideicomisos</a></li>
+      <li><a href="#creditos">Créditos</a></li>
+      <li><a href="#clientes">Clientes</a></li>
+      <li><a href="#socios">Socios</a></li>
+      <li><a href="#blog">Blog</a></li>
+      <li><a href="#faq">Preguntas</a></li>
+      <li><a href="#transparencia">Transparencia</a></li>
+      <li><a class="btn" href="#contacto">Contacto <span class="ar">→</span></a></li>
+    </ul>
+    <button class="burger" id="burger" aria-expanded="false" aria-controls="menu">Menú</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ INICIO ============ -->
+<section class="view" id="v-inicio">
+  <div class="f f-paper hero">
+    <div class="wrap">
+      <p class="mono" style="margin-bottom:clamp(18px,2.4vw,34px)">Fiduciaria especializada en el sector inmobiliario · Mazatlán, Sinaloa</p>
+      <h1 class="h-xl">Transformando <span class="x">desafíos</span> en oportunidades<span class="dot">.</span></h1>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="lead">Somos el tercero neutral que da certeza a los dos lados de una operación. Lo hacemos con un instrumento: el fideicomiso, diseñado a la medida.</p>
+          <div class="row">
+            <a class="btn btn-solid" href="#contacto">Agendar diagnóstico <span class="ar">→</span></a>
+            <a class="btn" href="#fideicomisos">Ver cómo funciona</a>
+          </div>
+        </div>
+        <nav class="bars" aria-label="Accesos principales">
+          <a class="bar" href="#fideicomisos" style="--h:52%;--i:0;--c:var(--teal);--t:var(--paper)"><span class="mono">01</span><b>Fideicomisos</b></a>
+          <a class="bar" href="#creditos" style="--h:64%;--i:1;--c:var(--orange);--t:var(--ink)"><span class="mono">02</span><b>Créditos</b></a>
+          <a class="bar" href="#clientes" style="--h:76%;--i:2;--c:var(--sea);--t:var(--ink)"><span class="mono">03</span><b>Clientes</b></a>
+          <a class="bar" href="#transparencia" style="--h:88%;--i:3;--c:var(--white);--t:var(--ink)"><span class="mono">04</span><b>Transparencia</b></a>
+          <a class="bar" href="#contacto" style="--h:100%;--i:4;--c:var(--ink);--t:var(--paper)"><span class="mono">05</span><b>Contacto</b></a>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <div class="f f-ink band">
+    <div class="wrap">
+      <p class="mono" style="margin-bottom:28px;color:var(--soft)">Por qué existimos</p>
+      <div class="fear" id="fear">
+        <p>El desarrollador tiene <span style="--d:.1s">miedo</span>.</p>
+        <p>El comprador tiene <span style="--d:.45s">miedo</span>.</p>
+        <p>El inversionista tiene <span style="--d:.8s">miedo</span>.</p>
+      </div>
+      <div class="peace">
+        <div><p class="mono" style="color:var(--soft)">Nuestra respuesta</p><figure class="ph" style="--r:4/5;margin-top:20px;max-width:420px"><figcaption><b>Imagen</b><span>Retrato o firma de contrato</span><span>4:5 · 1200×1500</span></figcaption></figure></div>
+        <blockquote>El fiduciario debe ser esa figura que dé paz y tranquilidad a las partes.
+          <small>Un fideicomiso debe funcionar como un reloj suizo: de forma exacta y coherente. Ese es el trabajo de DAG Soluciones Financieras.</small>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+
+  <div class="duo">
+    <a class="f f-teal" href="#fideicomisos">
+      <p class="mono">Unidad Fiduciaria</p>
+      <div><h2 class="h-l">Fideicomisos</h2><p class="lead" style="margin-top:18px;color:var(--soft)">Un instrumento legal. Muchas aplicaciones. El que tu caso requiere.</p></div>
+      <div><ul><li>Desarrollo inmobiliario</li><li>Escrow / Fuente de pago</li><li>Garantía</li><li>Depósito condicionado irrevocable</li><li>Asesoría inmobiliaria</li></ul>
+      <p class="go" style="margin-top:26px"><i>→</i> Entrar a Fideicomisos</p></div>
+      <span class="num" aria-hidden="true">01</span>
+    </a>
+    <a class="f f-orange" href="#creditos">
+      <p class="mono">Unidad Financiera</p>
+      <div><h2 class="h-l">Créditos</h2><p class="lead" style="margin-top:18px">Financiamiento para personas y empresas, con capital propio o de terceros.</p></div>
+      <div><ul><li>Microcréditos</li><li>Créditos nómina</li><li>Intermediación financiera</li><li>Depósito garantizado</li><li>Factoraje · próximamente</li></ul>
+      <p class="go" style="margin-top:26px"><i>→</i> Entrar a Créditos</p></div>
+      <span class="num" aria-hidden="true">02</span>
+    </a>
+  </div>
+
+  <div class="f f-paper band">
+    <div class="wrap">
+      <div class="shead rv"><p class="mono">El patrón</p><div><h2 class="h-l">Siempre hay dos partes. Nosotros somos la tercera<span class="dot">.</span></h2><p class="body" style="margin-top:20px">En cada operación hay alguien que entrega y alguien que espera recibir. DAG SF se coloca en medio y garantiza que lo pactado se cumpla.</p></div></div>
+      <div class="tri rv" id="tri"></div>
+      <p style="margin-top:28px" class="row"><span class="h-s">¿Tu caso no está aquí? El fideicomiso se diseña a la medida.</span> <a class="btn" href="#contacto">Cuéntanos tu caso <span class="ar">→</span></a></p>
+    </div>
+  </div>
+
+  <div class="f f-white band">
+    <div class="wrap">
+      <div class="shead rv"><p class="mono">Cómo se constituye</p><h2 class="h-l">Del primer mensaje a la firma ante notario<span class="dot">.</span></h2></div>
+      <div class="steps rv" id="steps"></div>
+    </div>
+  </div>
+
+  <div class="f f-paper band">
+    <div class="wrap">
+      <div class="shead rv"><p class="mono">Quién responde</p><h2 class="h-l">Cuatro firmas<span class="dot">.</span> Una responsabilidad<span class="dot">.</span></h2></div>
+      <div class="ph-grid rv"><figure class="ph" style="--r:4/5"><figcaption><b>Foto</b><span>Miguel Izaguirre Castro</span><span>4:5 · 800×1000</span></figcaption></figure><figure class="ph" style="--r:4/5"><figcaption><b>Foto</b><span>Miguel Izaguirre Ojeda</span><span>4:5 · 800×1000</span></figcaption></figure><figure class="ph" style="--r:4/5"><figcaption><b>Foto</b><span>Guillermo Izaguirre</span><span>4:5 · 800×1000</span></figcaption></figure><figure class="ph" style="--r:4/5"><figcaption><b>Foto</b><span>David Izaguirre</span><span>4:5 · 800×1000</span></figcaption></figure></div>
+      <div class="rows team rv">
+        <div><span class="mono">01</span><h3>Miguel Izaguirre Castro</h3><span class="r">Director General</span></div>
+        <div><span class="mono">02</span><h3>Miguel Izaguirre Ojeda</h3><span class="r">Director Fiduciario</span></div>
+        <div><span class="mono">03</span><h3>Guillermo Izaguirre</h3><span class="r">Gerente Inmobiliario</span></div>
+        <div><span class="mono">04</span><h3>David Izaguirre</h3><span class="r">Gerente Legal</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="f f-sea band">
+    <div class="wrap">
+      <div class="shead rv"><p class="mono">Blog</p><div><h2 class="h-l">Antes de firmar, entiende<span class="dot" style="color:var(--ink)">.</span></h2><p class="body" style="margin-top:20px">Explicamos el fideicomiso sin jerga. Sin pedirte nada a cambio.</p></div></div>
+      <div class="posts rv" id="posts-home"></div>
+      <p style="margin-top:28px"><a class="btn" href="#blog">Ir al blog <span class="ar">→</span></a></p>
+    </div>
+  </div>
+
+  <div class="f f-white band">
+    <div class="wrap">
+      <div class="shead rv"><p class="mono">Preguntas frecuentes</p><h2 class="h-l">Lo que todos preguntan primero<span class="dot">.</span></h2></div>
+      <div class="faq rv" id="faq-home"></div>
+      <p style="margin-top:28px"><a class="btn" href="#faq">Ver todas las preguntas <span class="ar">→</span></a></p>
+    </div>
+  </div>
+
+  <div class="f f-teal closing">
+    <div class="wrap">
+      <p class="mono" style="margin-bottom:28px;color:var(--soft)">Siguiente paso</p>
+      <h2 class="h-xl">El banco te presta<span class="dot">.</span><br>DAG SF te protege<span class="dot">.</span></h2>
+      <div class="row"><a class="btn btn-solid" href="#contacto">Agendar diagnóstico <span class="ar">→</span></a><a class="btn" href="https://wa.me/523349423012" target="_blank" rel="noopener">WhatsApp +52 334 942 3012</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FIDEICOMISOS ============ -->
+<section class="view" id="v-fideicomisos" hidden>
+  <div class="f f-teal"><div class="wrap phead">
+    <p class="mono"><span>01</span><span>Unidad Fiduciaria</span></p>
+    <h1 class="h-xl">¿Tu proyecto tiene fideicomiso o solo tiene <em class="s">esperanza</em>?</h1>
+    <p class="lead">No existen “tipos” de fideicomiso como productos cerrados. Existe un instrumento legal y la aplicación que tu caso necesita. Aquí están las más comunes, explicadas por situación.</p>
+  </div></div>
+  <div class="f f-teal"><div class="wrap ph-band"><figure class="ph ph-wide"><figcaption><b>Imagen</b><span>Obra o desarrollo inmobiliario</span><span>21:9 · 2400×1030</span></figcaption></figure></div></div>
+  <div class="f f-paper"><div class="wrap" id="fid-list"></div></div>
+  <div class="f f-orange band"><div class="wrap open-door">
+    <h2 class="h-l">¿Tu caso no está aquí? El fideicomiso se diseña a la medida.</h2>
+    <div><p style="margin-bottom:20px;max-width:40ch">Describe la operación y quiénes participan. El área de estructuración revisa viabilidad y propone el mecanismo.</p><a class="btn btn-solid" href="#contacto">Cuéntanos tu caso <span class="ar">→</span></a></div>
+  </div></div>
+  <div class="f f-white band"><div class="wrap">
+    <div class="shead"><p class="mono">Qué te vamos a pedir</p><div><h2 class="h-l">El expediente<span class="dot">.</span></h2><p class="body" style="margin-top:20px">Toda relación inicia con identificación y una entrevista personal. Es obligación legal en materia de prevención de lavado de dinero, y es lo que permite que cada parte confíe en quién está del otro lado.</p></div></div>
+    <div class="cols2">
+      <div><h3 class="h-s">Persona física</h3><ul class="ticks"><li>Identificación oficial</li><li>Constancia CURP</li><li>Cédula de identificación fiscal</li><li>Comprobante de domicilio</li><li>Declaración sobre cargos públicos (PEP) y origen lícito de los recursos</li></ul></div>
+      <div><h3 class="h-s">Persona moral</h3><ul class="ticks"><li>Acta constitutiva y últimas reformas estatutarias</li><li>Poderes notariales e identificación del representante legal</li><li>Cédula de identificación fiscal y comprobante de domicilio</li><li>Estructura accionaria y propietario real</li><li>Currículum empresarial</li></ul></div>
+    </div>
+    <p class="body" style="margin-top:24px">No se reciben pagos en efectivo.</p>
+  </div></div>
+  <div class="f f-ink band"><div class="wrap open-door">
+    <div><p class="mono" style="color:var(--soft);margin-bottom:16px">Micrositio</p><h2 class="h-m">fideicomisos.dagsf.com.mx</h2></div>
+    <div><p class="body" style="margin-bottom:18px">Servicio fiduciario, asesoría fiduciaria y una página por aplicación.</p><a class="btn btn-solid" href="https://claude.ai/artifact/12Tcn9W8r2fRrY9jSKaxch" target="_blank" rel="noopener">Abrir el micrositio <span class="ar">→</span></a></div>
+  </div></div>
+</section>
+
+<!-- ============ CRÉDITOS ============ -->
+<section class="view" id="v-creditos" hidden>
+  <div class="f f-orange"><div class="wrap phead">
+    <p class="mono"><span>02</span><span>Unidad Financiera</span></p>
+    <h1 class="h-xl">Un crédito que te deja <em class="s">invertir</em> el crédito.</h1>
+    <p class="lead">En nuestros créditos, intereses y capital se pagan al vencimiento. El recurso se queda trabajando en tu negocio mientras tanto.</p>
+  </div></div>
+  <div class="f f-orange"><div class="wrap ph-band"><figure class="ph ph-wide"><figcaption><b>Imagen</b><span>Negocio o empresa acreditada</span><span>21:9 · 2400×1030</span></figcaption></figure></div></div>
+  <div class="f f-paper"><div class="wrap" id="fin-list"></div></div>
+  <div class="f f-white band"><div class="wrap">
+    <div class="shead"><p class="mono">Lo que no prometemos</p><div><h2 class="h-l">Sin letras chiquitas<span class="dot">.</span></h2></div></div>
+    <div class="rows">
+      <div><h3>No garantizamos rendimientos</h3><p>En los fideicomisos constituidos para otorgar crédito, la SOFOM no responde ante quien aporta el capital por el incumplimiento de los deudores, ni garantiza rendimientos. Al terminar el fideicomiso, los créditos no liquidados se transfieren a quien aportó. Así lo ordena la LGOAAC (art. 87-Ñ, fracción V, inciso b) y así se escribe, de forma notoria, en el contrato.</p></div>
+      <div><h3>Tasas, CAT y comisiones</h3><p>Dato no disponible en el contexto proporcionado. Se informan por escrito en cada cotización, antes de contratar. <span class="tag tag-pend">Por publicar</span></p></div>
+    </div>
+  </div></div>
+  <div class="f f-ink band"><div class="wrap open-door">
+    <div><p class="mono" style="color:var(--soft);margin-bottom:16px">Micrositio</p><h2 class="h-m">creditos.dagsf.com.mx</h2></div>
+    <div><p class="body" style="margin-bottom:18px">Financiamiento, intermediación para inversionistas y una ficha por producto.</p><a class="btn btn-solid" href="https://claude.ai/artifact/3kDDBUS87wSF5JZVm3SwfR" target="_blank" rel="noopener">Abrir el micrositio <span class="ar">→</span></a></div>
+  </div></div>
+</section>
+
+<!-- ============ CLIENTES ============ -->
+<section class="view" id="v-clientes" hidden>
+  <div class="f f-sea"><div class="wrap phead">
+    <p class="mono"><span>03</span><span>Clientes</span></p>
+    <h1 class="h-xl">Ya firmaste<span class="dot" style="color:var(--ink)">.</span> Ahora, <em class="s">esto</em> pasa.</h1>
+    <p class="lead">Lo que puedes esperar de DAG SF después de la firma, y la entrada a tu espacio personal.</p>
+  </div></div>
+  <div class="f f-paper band"><div class="wrap portal">
+    <div>
+      <p class="mono" style="margin-bottom:18px">Cómo trabajamos contigo</p>
+      <div class="rows">
+        <div><h3>Canal oficial</h3><p>Después de la firma se registran las firmas autorizadas y se da de alta un canal oficial. Las instrucciones al fiduciario se reciben por ese canal.</p></div>
+        <div><h3>Tu Comité Técnico</h3><p>Lo integran tus representantes, no los nuestros. Fideicomitentes y fideicomisarios lo designan; el fiduciario ejecuta lo que el contrato y el Comité instruyen.</p></div>
+        <div><h3>Tu expediente</h3><p>Se conserva en formato físico y electrónico, con control de acceso y respaldos, durante toda la vigencia del contrato y diez años después de su conclusión.</p></div>
+        <div><h3>Si hay controversia</h3><p>El mecanismo queda escrito en tu contrato desde el día uno. En garantía es extrajudicial, con ventanas de 2 a 3 días hábiles.</p></div>
+        <div><h3>Atención</h3><p>Valeria Santana Márquez, Ejecutiva de Atención Fiduciaria. WhatsApp <b style="user-select:all;color:var(--ink)">+52 334 942 3012</b>.</p></div>
+      </div>
+    </div>
+    <aside class="login f f-white" aria-label="Acceso al portal de clientes"><figure class="ph" style="--r:16/9"><figcaption><b>Imagen</b><span>Captura del portal</span><span>16:9 · 1600×900</span></figcaption></figure>
+      <p class="mono">app.dagsf.com.mx</p>
+      <h2 class="h-m">Tu espacio personal</h2>
+      <p class="body">Expediente, documentos e instrucciones de tu fideicomiso en un solo lugar.</p>
+      <div class="field">usuario@correo.com</div>
+      <div class="field">••••••••••</div>
+      <a class="btn btn-solid" href="https://app.dagsf.com.mx" target="_blank" rel="noopener" style="justify-content:center">Entrar al portal <span class="ar">→</span></a>
+      <p style="font-size:14px"><span class="tag">En desarrollo</span> &nbsp;El portal aún no está en línea. Mientras tanto, tu ejecutivo te atiende por el canal oficial.</p>
+    </aside>
+  </div></div>
+  <div class="f f-white band"><div class="wrap">
+    <div class="shead"><p class="mono">Las seis fases</p><h2 class="h-l">Dónde vas y qué sigue<span class="dot">.</span></h2></div>
+    <div class="steps" id="steps2"></div>
+  </div></div>
+</section>
+
+<!-- ============ SOCIOS ============ -->
+<section class="view" id="v-socios" hidden>
+  <div class="f f-paper"><div class="wrap phead">
+    <p class="mono"><span>04</span><span>Socios comerciales</span></p>
+    <h1 class="h-xl">Un fideicomiso nunca se hace <em class="s">solo</em><span class="dot">.</span></h1>
+    <p class="lead">Notario, abogado, desarrollador, agente: cada operación junta a varios oficios. Estamos construyendo la red con quienes los ejercen bien.</p>
+  </div></div>
+  <div class="f f-paper band" style="padding-top:clamp(40px,5vw,72px)"><div class="wrap">
+    <p class="mono" style="margin-bottom:14px">Logos de aliados</p><div class="ph-logos"><figure class="ph" style="--r:3/2"><figcaption><b>Logo</b><span>SVG o PNG</span></figcaption></figure><figure class="ph" style="--r:3/2"><figcaption><b>Logo</b><span>SVG o PNG</span></figcaption></figure><figure class="ph" style="--r:3/2"><figcaption><b>Logo</b><span>SVG o PNG</span></figcaption></figure><figure class="ph" style="--r:3/2"><figcaption><b>Logo</b><span>SVG o PNG</span></figcaption></figure><figure class="ph" style="--r:3/2"><figcaption><b>Logo</b><span>SVG o PNG</span></figcaption></figure><figure class="ph" style="--r:3/2"><figcaption><b>Logo</b><span>SVG o PNG</span></figcaption></figure></div>
+    <div class="allies" id="allies"></div>
+  </div></div>
+  <div class="f f-teal band"><div class="wrap open-door">
+    <div><h2 class="h-l">¿Tu cliente necesita certeza? Tráelo<span class="dot">.</span></h2><p class="body" style="margin-top:20px">Tú conservas la relación. Nosotros somos el tercero neutral de la operación.</p></div>
+    <div><a class="btn btn-solid" href="#contacto">Proponer una alianza <span class="ar">→</span></a></div>
+  </div></div>
+</section>
+
+<!-- ============ BLOG ============ -->
+<section class="view" id="v-blog" hidden>
+  <div class="f f-sea"><div class="wrap phead">
+    <p class="mono"><span>05</span><span>Blog</span></p>
+    <h1 class="h-xl">Antes de firmar, <em class="s">entiende</em><span class="dot" style="color:var(--ink)">.</span></h1>
+    <p class="lead">Fideicomisos, garantías y cumplimiento explicados como se le explican a un socio: claro y sin adornos.</p>
+  </div></div>
+  <div class="f f-paper band" style="padding-top:clamp(40px,5vw,72px)"><div class="wrap">
+    <div class="posts" id="posts"></div>
+  </div></div>
+  <div class="f f-ink band"><div class="wrap news">
+    <div><p class="mono" style="color:var(--soft);margin-bottom:16px">Boletín</p><h2 class="h-l">Una idea útil. Sin spam<span class="dot">.</span></h2></div>
+    <div>
+      <form id="news"><input type="email" required placeholder="tu@correo.com" aria-label="Correo electrónico"><button class="btn btn-solid" type="submit">Suscribirme</button></form>
+      <p class="fine" id="news-msg" style="margin-top:14px">Te escribimos solo cuando hay algo que vale la pena leer.</p>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="view" id="v-faq" hidden>
+  <div class="f f-white"><div class="wrap phead">
+    <p class="mono"><span>06</span><span>Preguntas frecuentes</span></p>
+    <h1 class="h-xl">Pregunta lo <em class="s">incómodo</em><span class="dot">.</span></h1>
+    <p class="lead">Respuestas cortas a lo que desarrolladores, compradores e inversionistas preguntan primero.</p>
+  </div></div>
+  <div class="f f-white band" style="padding-top:clamp(40px,5vw,72px)"><div class="wrap">
+    <div class="chips" id="chips"></div>
+    <div class="faq" id="faq-all"></div>
+    <p class="row" style="margin-top:36px"><span class="h-s">¿No está tu pregunta?</span> <a class="btn" href="#contacto">Hazla directo <span class="ar">→</span></a></p>
+  </div></div>
+</section>
+
+<!-- ============ TRANSPARENCIA ============ -->
+<section class="view" id="v-transparencia" hidden>
+  <div class="f f-ink"><div class="wrap phead">
+    <p class="mono"><span>07</span><span>Transparencia y cumplimiento</span></p>
+    <h1 class="h-xl">Quién nos <em class="s">vigila</em> y cómo reclamarnos<span class="dot">.</span></h1>
+    <p class="lead">Registros, atención a usuarios, datos personales y prevención de lavado de dinero. Todo en una página.</p>
+  </div></div>
+  <div class="f f-paper"><div class="wrap">
+
+    <div class="legal" id="t-entidad">
+      <h2 class="h-m">Quiénes somos ante la ley</h2>
+      <div>
+        <p class="stamp">JMF Arquitectura de Negocios, S.A.P.I. de C.V., SOFOM, E.N.R., para su constitución y operación con tal carácter, no requiere autorización de la Secretaría de Hacienda y Crédito Público, y está sujeta a la supervisión de la Comisión Nacional Bancaria y de Valores únicamente para efectos del artículo 56 de la Ley General de Organizaciones y Actividades Auxiliares del Crédito.</p>
+        <dl>
+          <div><dt>Denominación</dt><dd><b>JMF Arquitectura de Negocios, S.A.P.I. de C.V., SOFOM, E.N.R.</b></dd></div>
+          <div><dt>Marcas</dt><dd>DAG SF® · DAG Soluciones Financieras®</dd></div>
+          <div><dt>Domicilio</dt><dd>Av. Reforma 2007-B, Plaza Laguna, Local C2, Col. Flamingos, CP 82149, Mazatlán, Sinaloa</dd></div>
+          <div><dt>Registro CONDUSEF</dt><dd>Sistema de Registro de Prestadores de Servicios Financieros (SIPRES), desde el 15 de junio de 2016. Clave CASFIM <b>694787</b></dd></div>
+          <div><dt>CNBV · PLD/FT</dt><dd>Dictamen técnico positivo del Manual de PLD, folio <b>6900000-2016-13016-NDT</b>, del 21 de junio de 2016</dd></div>
+          <div><dt>Marco legal</dt><dd>LGOAAC (art. 95 Bis) · LFPIORPI · LGTOC</dd></div>
+          <div><dt>Sociedad de información crediticia</dt><dd>Círculo de Crédito, S.A. de C.V., SIC</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="legal" id="t-une">
+      <h2 class="h-m">UNE: si algo salió mal</h2>
+      <div>
+        <p class="body" style="margin-bottom:20px">La Unidad Especializada de Atención a Usuarios recibe consultas, aclaraciones y reclamaciones sobre nuestros productos y servicios.</p>
+        <dl>
+          <div><dt>Domicilio</dt><dd>Av. Reforma 2007-B, Plaza Laguna, Local C2, Col. Flamingos, CP 82149, Mazatlán, Sinaloa</dd></div>
+          <div><dt>Teléfono</dt><dd><b style="user-select:all">669 112 1734</b></dd></div>
+          <div><dt>Correo</dt><dd><b style="user-select:all">hola@dagsf.com.mx</b></dd></div>
+          <div><dt>Titular de la UNE</dt><dd><span class="tag tag-pend">Por publicar</span></dd></div>
+          <div><dt>Horario de atención</dt><dd><span class="tag tag-pend">Por publicar</span></dd></div>
+          <div><dt>CONDUSEF</dt><dd>Si la respuesta no te satisface, puedes acudir a la Comisión Nacional para la Protección y Defensa de los Usuarios de Servicios Financieros: <b>55 5340 0999</b> y <b>800 999 8080</b> · <a href="https://www.condusef.gob.mx" target="_blank" rel="noopener">www.condusef.gob.mx</a></dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="legal" id="t-arco">
+      <h2 class="h-m">Tus datos y derechos ARCO</h2>
+      <div>
+        <p class="body">DAG SF es responsable de tus datos personales conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares. Los tratamos de manera confidencial para operar y registrar los productos que contrates y, en su caso, para ofrecerte otros productos financieros.</p>
+        <div class="arco">
+          <div><b>A</b><h3>Acceso</h3><p>Saber qué datos tuyos tenemos y para qué los usamos.</p></div>
+          <div><b>R</b><h3>Rectificación</h3><p>Corregirlos si son inexactos o están incompletos.</p></div>
+          <div><b>C</b><h3>Cancelación</h3><p>Pedir que se eliminen cuando ya no deban tratarse.</p></div>
+          <div><b>O</b><h3>Oposición</h3><p>Negarte a que se usen para fines específicos.</p></div>
+        </div>
+        <dl>
+          <div><dt>Aviso de privacidad integral</dt><dd>dagsf.com.mx/aviso-de-privacidad.html</dd></div>
+          <div><dt>Canal para ejercerlos</dt><dd><b style="user-select:all">hola@dagsf.com.mx</b> o en el domicilio de la UNE</dd></div>
+          <div><dt>Procedimiento, requisitos y plazos</dt><dd><span class="tag tag-pend">Por publicar</span></dd></div>
+          <div><dt>Cambios al aviso</dt><dd>Se notifican por escrito, estado de cuenta, correo electrónico, teléfono móvil o en dagsf.com.mx</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="legal" id="t-pld">
+      <h2 class="h-m">Prevención de lavado de dinero</h2>
+      <div>
+        <p class="body" style="margin-bottom:20px">Por eso preguntamos tanto. Operamos con un Manual de PLD/FT propio y un Oficial de Cumplimiento.</p>
+        <dl>
+          <div><dt>Identificación</dt><dd>Expediente y entrevista personal con cada cliente antes de contratar</dd></div>
+          <div><dt>Listas</dt><dd>Verificación en cada alta y actualización contra la lista OFAC y la Lista de Personas Bloqueadas de la SHCP</dd></div>
+          <div><dt>Personas políticamente expuestas</dt><dd>Declaración obligatoria del cliente, su cónyuge y parientes hasta segundo grado</dd></div>
+          <div><dt>Conservación</dt><dd>Expedientes y registros de operaciones por un mínimo de diez años</dd></div>
+          <div><dt>Efectivo</dt><dd>No se reciben pagos en efectivo</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="legal" id="t-docs" style="border-bottom:0">
+      <h2 class="h-m">Documentos</h2>
+      <div><dl>
+        <div><dt>Aviso de privacidad integral</dt><dd><span class="tag tag-pend">Por publicar</span></dd></div>
+        <div><dt>Términos y condiciones del sitio</dt><dd><span class="tag tag-pend">Por publicar</span></dd></div>
+        <div><dt>Contratos de adhesión y comisiones</dt><dd><span class="tag tag-pend">Por publicar</span></dd></div>
+        <div><dt>Costo Anual Total (CAT) por producto de crédito</dt><dd><span class="tag tag-pend">Por publicar</span></dd></div>
+      </dl></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ CONTACTO ============ -->
+<section class="view" id="v-contacto" hidden>
+  <div class="f f-paper"><div class="wrap phead">
+    <p class="mono"><span>08</span><span>Contacto</span></p>
+    <h1 class="h-xl">Cuéntanos qué te <em class="s">preocupa</em><span class="dot">.</span></h1>
+    <p class="lead">Un diagnóstico empieza con una conversación. La forma más rápida es WhatsApp.</p>
+  </div></div>
+  <div class="f f-paper band" style="padding-top:clamp(40px,5vw,72px)"><div class="wrap contact">
+    <div style="display:grid;gap:28px;align-content:start"><figure class="ph" style="--r:16/9"><figcaption><b>Imagen</b><span>Oficina en Plaza Laguna, Mazatlán</span><span>16:9 · 1600×900</span></figcaption></figure>
+      <a class="wa" href="https://wa.me/523349423012" target="_blank" rel="noopener">
+        <span class="mono">WhatsApp · canal principal</span>
+        <b>+52 334 942 3012</b>
+        <span style="font-weight:700">Abrir conversación →</span>
+      </a>
+      <div class="rows">
+        <div><span class="mono">Correo</span><p style="color:var(--ink);font-weight:700;user-select:all">hola@dagsf.com.mx</p></div>
+        <div><span class="mono">Oficina</span><p>Av. Reforma 2007-B, Plaza Laguna, Local C2, Mazatlán, Sinaloa, CP 82149</p></div>
+        <div><span class="mono">Enlace</span><p>Monterrey · Guadalajara</p></div>
+        <div><span class="mono">Aclaraciones y quejas</span><p><a href="#transparencia">Unidad Especializada de Atención a Usuarios →</a></p></div>
+      </div>
+    </div>
+    <form class="cf" id="cf">
+      <h2 class="h-m" style="margin-bottom:6px">Diagnóstico inicial</h2>
+      <div class="two"><label>Nombre<input name="n" required autocomplete="name"></label><label>Empresa o proyecto<input name="e"></label></div>
+      <label>Soy
+        <select name="r" required><option value="">Elige una opción</option><option>Desarrollador inmobiliario</option><option>Comprador o inversionista</option><option>Acreedor o deudor en una operación</option><option>Empresa que busca financiamiento</option><option>Notario, abogado o agente (alianza)</option><option>Otro</option></select></label>
+      <label>¿Qué operación quieres proteger?<textarea name="m" required placeholder="Quiénes participan, qué se entrega y qué te preocupa que falle."></textarea></label>
+      <button class="btn btn-solid" type="submit" style="justify-self:start">Preparar mensaje <span class="ar">→</span></button>
+      <div class="note" id="cf-out" hidden></div>
+    </form>
+  </div></div>
+</section>
+
+</main>
+
+<footer class="f f-ink">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="logo" href="#inicio"><svg viewBox="0 0 32 28" fill="currentColor" aria-hidden="true"><rect x="0" y="20" width="5" height="8"/><rect x="6.75" y="15" width="5" height="13"/><rect x="13.5" y="10" width="5" height="18"/><rect x="20.25" y="5" width="5" height="23"/><rect x="27" y="0" width="5" height="28"/></svg><b>DAG®</b><span>Soluciones<br>Financieras</span></a>
+        <p class="fine">JMF Arquitectura de Negocios, S.A.P.I. de C.V., SOFOM, E.N.R., para su constitución y operación con tal carácter, no requiere autorización de la Secretaría de Hacienda y Crédito Público, y está sujeta a la supervisión de la Comisión Nacional Bancaria y de Valores únicamente para efectos del artículo 56 de la LGOAAC.</p>
+        <p class="fine">UNE: Av. Reforma 2007-B, Plaza Laguna, Local C2, Col. Flamingos, CP 82149, Mazatlán, Sinaloa · 669 112 1734 · hola@dagsf.com.mx. CONDUSEF: 55 5340 0999 y 800 999 8080 · www.condusef.gob.mx</p>
+      </div>
+      <div><h4>Servicios</h4><ul><li><a href="#fideicomisos">Fideicomisos</a></li><li><a href="#creditos">Créditos</a></li><li><a href="#clientes">Clientes</a></li><li><a href="#socios">Socios comerciales</a></li></ul></div>
+      <div><h4>Aprende</h4><ul><li><a href="#blog">Blog</a></li><li><a href="#faq">Preguntas frecuentes</a></li><li><a href="#contacto">Contacto</a></li></ul></div>
+      <div><h4>Legal</h4><ul><li><a href="#transparencia">Transparencia</a></li><li><a href="#transparencia">UNE</a></li><li><a href="#transparencia">Aviso de privacidad y ARCO</a></li><li><a href="#transparencia">PLD/FT</a></li></ul></div>
+    </div>
+    <div class="base"><span>© 2026 DAG Soluciones Financieras</span><span>Transformando desafíos en oportunidades</span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+document.documentElement.classList.add('js');
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
+
+/* ---------- Contenido ---------- */
+var TRI=[
+ ['Desarrollo inmobiliario','Desarrollador','Inversionista'],
+ ['Escrow','Comprador','Vendedor'],
+ ['Garantía','Deudor','Acreedor'],
+ ['Depósito condicionado','Parte A','Parte B'],
+ ['Intermediación financiera','Inversionista','Prestatario']
+];
+var STEPS=[
+ ['0','Contacto y brief','Nos cuentas la operación. Agendamos el diagnóstico.','Tú · Fiduciaria'],
+ ['1','Identificación','Expediente, entrevista personal y validación PLD/FT.','Fiduciaria · Tú'],
+ ['2','Estudio y diseño','Viabilidad, mecanismo, fines y resolución de controversias. Cotización.','Estructurador'],
+ ['3','Contrato','Redacción y validación de cumplimiento. Tú revisas.','Estructurador · Tú'],
+ ['4','Firma','Se protocoliza ante notario. Tu Comité Técnico entra en funciones.','Notario · Todos'],
+ ['5','Alta operativa','Registro de firmas y canal oficial para instrucciones.','Fiduciaria']
+];
+var FID=[
+ {t:'Desarrollo inmobiliario',q:'“Yo pongo la tierra. Mi socio construye. ¿Quién cuida el reparto?”',
+  w:['Las partes aportan terreno, construcción o recursos a un patrimonio autónomo, separado del de cada una. La propiedad del inmueble y de lo construido queda unificada en el fideicomiso.','El fiduciario administra lo que entra por la comercialización y lo distribuye según lo pactado.'],
+  a:'Desarrollador',b:'Inversionista',c:'A la medida, definido en cada contrato'},
+ {t:'Escrow / Fuente de pago',q:'“Pago cuando me entreguen. Entrego cuando me paguen.”',
+  w:['Los recursos se depositan en una cuenta a nombre del fideicomiso y solo se liberan cuando se cumple la condición, el evento o la fecha acordada.','Se usa en compras de tierra a plazos, tierra por liberar de régimen ejidal o de gravámenes, y compra de maquinaria.'],
+  a:'Comprador',b:'Vendedor',c:'A la medida, definido en cada contrato'},
+ {t:'Garantía',q:'“Presto si hay garantía real. Firmo si la garantía no se usa en mi contra.”',
+  w:['Garantiza al acreedor el cumplimiento de una obligación y su preferencia en el pago. Es una garantía bilateral: protege tanto al acreedor como al deudor.','Si hay incumplimiento, la ejecución es extrajudicial.'],
+  a:'Deudor',b:'Acreedor',c:'Extrajudicial. Ventanas de 2 a 3 días hábiles. Pena pecuniaria por reclamo infundado'},
+ {t:'Depósito condicionado irrevocable',q:'“Dejo el dinero apartado. Que nadie lo toque hasta que se cumpla.”',
+  w:['El depositante entrega una cantidad al depositario, que la custodia. Cumplida la condición, se entrega al beneficiario. Si no se cumple en el plazo, regresa al depositante.','Un tercero independiente de la relación entre las partes decide con base en lo escrito, no en lo que cada una alega.'],
+  a:'Depositante',b:'Beneficiario',c:'Según lo pactado en el contrato'},
+ {t:'Zona restringida',q:'“Soy extranjero y quiero comprar en la costa.”',
+  w:['El fideicomiso permite al comprador extranjero adquirir derechos sobre un inmueble en la zona costera cumpliendo la ley mexicana.','Proceso con rapidez y claridad sobre cada paso legal.'],
+  a:'Comprador extranjero',b:'Cumplimiento de la ley mexicana',c:'No aplica'},
+ {t:'Asesoría inmobiliaria',q:'“Tengo el proyecto. Me falta saber si los números y el mercado lo sostienen.”',
+  w:['Acompañamos el desarrollo desde antes del fideicomiso: estudios de mercado, prospección, diseño de producto, estructuración financiera y de capital, evaluación de tierra.','También reportes de mercado, CRM y administración de proyecto.'],
+  a:'Tu proyecto',b:'Mercado y capital',c:'No aplica'}
+];
+var FIN=[
+ {t:'Intermediación financiera',q:'“Tengo capital. No tengo la estructura para prestarlo bien.”',
+  w:['Un tercero pone el capital. DAG SF administra el producto de crédito o lo diseña.','Aplica a créditos PyME. Intereses y capital se pagan al vencimiento.'],a:'Inversionista',b:'Prestatario',s:'Activo'},
+ {t:'Microcréditos',q:'“Necesito poco, y lo necesito ya.”',
+  w:['Crédito al consumo de corto plazo, con recursos propios y rondas de inversión.','Condiciones por producto: dato no disponible en el contexto proporcionado.'],a:'DAG SF',b:'Acreditado',s:'Activo'},
+ {t:'Créditos nómina',q:'“Quiero un crédito ligado a mi ingreso.”',
+  w:['Descripción del producto: dato no disponible en el contexto proporcionado.'],a:'DAG SF',b:'Acreditado',s:'Detalle por publicar'},
+ {t:'Depósito garantizado',q:'“Quiero que mi depósito tenga respaldo.”',
+  w:['Descripción del producto: dato no disponible en el contexto proporcionado.'],a:'Depositante',b:'Beneficiario',s:'Detalle por publicar'},
+ {t:'Factoraje',q:'“Ya vendí. Me pagan en 90 días. Necesito el dinero hoy.”',
+  w:['En preparación. También se prevé crédito revolvente con pagos mensuales.'],a:'Empresa',b:'Su cliente',s:'Próximamente'}
+];
+var POSTS=[
+ ['Desarrolladores','¿Tu proyecto tiene fideicomiso o solo tiene esperanza?','Qué cambia para tu inversionista cuando la tierra y el dinero salen de tu patrimonio.'],
+ ['Fideicomisos','No hay “tipos” de fideicomiso. Hay un instrumento y muchos usos.','Por qué el catálogo cerrado te hace creer que tu caso no cabe.'],
+ ['Garantías','Garantía fiduciaria: por qué protege a los dos lados.','El acreedor cobra con preferencia. El deudor sabe que nadie ejecuta sin causa.'],
+ ['Escrow','El dinero se mueve cuando la condición se cumple. Ni antes ni después.','Tierra a plazos, ejido por liberar, maquinaria: tres casos de uso.'],
+ ['Cumplimiento','Por qué te preguntamos tanto: el expediente, explicado.','Entrevista, listas y origen de recursos. Lo que pedimos y para qué sirve.'],
+ ['Gobierno','Comité Técnico: quién decide dentro de tu fideicomiso.','Pista: no es el fiduciario. Lo integran tus propios representantes.']
+];
+var FAQ=[
+ ['Básico','¿Qué es un fideicomiso?','<p>Es un contrato por el que una persona (fideicomitente) transmite bienes o derechos a un fiduciario para que los destine a un fin determinado, en favor de un beneficiario (fideicomisario).</p><p>Esos bienes forman un patrimonio autónomo, separado del de cada parte.</p>'],
+ ['Básico','¿Cuántos tipos de fideicomiso manejan?','<p>Ninguno, en el sentido de catálogo. Es un solo instrumento legal con muchas aplicaciones: desarrollo inmobiliario, escrow, garantía y otras. Estructuramos el que tu caso requiere.</p>'],
+ ['Básico','¿DAG SF es un banco?','<p>No. Es la marca de JMF Arquitectura de Negocios, S.A.P.I. de C.V., SOFOM, E.N.R. No requiere autorización de la SHCP para operar y la CNBV la supervisa en materia de prevención de lavado de dinero.</p>'],
+ ['Básico','¿Por qué necesito a un tercero?','<p>Porque en toda operación hay dos partes con miedo a que la otra no cumpla. El fiduciario no es parte del negocio: ejecuta lo que está escrito, para ambos.</p>'],
+ ['Proceso','¿Cómo empieza el proceso?','<p>Con un mensaje y un diagnóstico. Después vienen seis fases: identificación, estudio y diseño, contrato, firma ante notario y alta operativa.</p>'],
+ ['Proceso','¿Qué documentos me van a pedir?','<p>Persona física: identificación oficial, CURP, cédula fiscal y comprobante de domicilio. Persona moral: acta constitutiva, reformas, poderes, identificación del representante, cédula fiscal, estructura accionaria y currículum empresarial.</p>'],
+ ['Proceso','¿Por qué me preguntan por cargos públicos y origen de recursos?','<p>Es obligación legal en prevención de lavado de dinero. La declaración incluye al cliente, a su cónyuge y a parientes hasta segundo grado. El formato es evidencia de la entrevista personal que exige la regulación.</p>'],
+ ['Proceso','¿Quién integra el Comité Técnico?','<p>Tus representantes. Lo designan los fideicomitentes y fideicomisarios. No es un órgano de DAG SF.</p>'],
+ ['Proceso','¿Qué pasa si hay un conflicto entre las partes?','<p>El mecanismo queda escrito en el contrato. En desarrollo inmobiliario y escrow se define a la medida. En garantía es extrajudicial, con ventanas de 2 a 3 días hábiles y pena pecuniaria si el reclamo es infundado.</p>'],
+ ['Costos','¿Cuánto cuesta?','<p>Dato no disponible en el contexto proporcionado. El equipo DAG SF elabora cotizaciones personalizadas según el ciclo del negocio y la fuente de pago de cada proyecto.</p>'],
+ ['Costos','¿Aceptan pagos en efectivo?','<p>No.</p>'],
+ ['Créditos','¿Garantizan rendimientos a quien aporta capital?','<p>No. En fideicomisos para otorgar crédito, la ley prohíbe a la SOFOM responder por el incumplimiento de los deudores o garantizar rendimientos. Lo decimos antes de firmar y queda escrito de forma notoria en el contrato.</p>'],
+ ['Créditos','¿Cómo se pagan sus créditos?','<p>Intereses y capital al vencimiento. Así el acreditado puede invertir el recurso completo durante el plazo.</p>'],
+ ['Tus derechos','¿Cuánto tiempo conservan mi expediente?','<p>Durante toda la vigencia del contrato y diez años después de su conclusión, en formato físico y electrónico, con control de acceso.</p>'],
+ ['Tus derechos','¿Cómo presento una queja?','<p>Ante la Unidad Especializada de Atención a Usuarios: 669 112 1734 o hola@dagsf.com.mx. Si la respuesta no te satisface, puedes acudir a la CONDUSEF. Los datos completos están en <a href="#transparencia">Transparencia</a>.</p>'],
+ ['Tus derechos','¿Dónde operan?','<p>Oficina en Mazatlán, Sinaloa. Oficinas de enlace en Monterrey y Guadalajara.</p>']
+];
+var ALLIES=[
+ ['Notarías públicas','Documentación legal en la constitución de fideicomisos y en la compraventa de propiedades.'],
+ ['Firmas de abogados','Asesoría sobre creación y administración de fideicomisos y contratos.'],
+ ['Desarrolladores inmobiliarios','Fideicomisos para la gestión de sus proyectos.'],
+ ['Agentes inmobiliarios','Refieren clientes y promueven propiedades administradas mediante fideicomiso.'],
+ ['Instituciones financieras','Financiamiento a fideicomisos y créditos a empresas.'],
+ ['Consultores de mercado','Estudios de mercado y análisis de inversión inmobiliaria.'],
+ ['Gestión de cobranza','Procesos de cobranza eficientes para cuidar la liquidez de cada proyecto.'],
+ ['Tecnología','Sistemas de gestión y administración de fideicomisos.'],
+ ['Cámaras de comercio','Acceso de sus miembros a créditos y microcréditos.'],
+ ['Plataformas de crowdfunding','Recursos para proyectos inmobiliarios a través de inversionistas en línea.'],
+ ['Universidades','Prácticas, capacitación y proyectos conjuntos en materia financiera e inmobiliaria.'],
+ ['Marketing inmobiliario','Visibilidad para los proyectos que operan con fideicomiso.']
+];
+
+/* ---------- Render ---------- */
+$('#tri').innerHTML='<div><span class="hd k">Aplicación</span><span class="hd a">Quien entrega</span><span class="hd" style="text-align:center">En medio</span><span class="hd b">Quien espera</span></div>'+
+ TRI.map(function(r){return '<div><span class="k">'+r[0]+'</span><span class="a">'+r[1]+'</span><span class="m">DAG SF garantiza</span><span class="b">'+r[2]+'</span></div>'}).join('');
+var stepsHTML=STEPS.map(function(s){return '<div><b>'+s[0]+'</b><h3>'+s[1]+'</h3><p>'+s[2]+'</p><span class="mono">'+s[3]+'</span></div>'}).join('');
+$('#steps').innerHTML=stepsHTML; $('#steps2').innerHTML=stepsHTML;
+function prod(p,i,fin){
+ return '<article class="prod"><div><p class="n"><span>'+(i<9?'0':'')+(i+1)+'</span><span>/</span><span>'+p.t.toUpperCase()+'</span>'+(fin?'<span class="tag'+(p.s==='Activo'?'':' tag-pend')+'">'+p.s+'</span>':'')+'</p><blockquote>'+p.q+'</blockquote></div>'+
+ '<div class="what"><h3 style="margin:0 0 12px">De qué se trata</h3>'+p.w.map(function(x,j){return '<p'+(j?' class="sm"':'')+'>'+x+'</p>'}).join('')+'</div>'+
+ '<aside class="side"><div><span class="mono">Quien entrega</span>'+p.a+'</div><div class="mid">DAG SF</div><div><span class="mono">Quien espera</span>'+p.b+'</div>'+(p.c?'<div><span class="mono">Si hay controversia</span>'+p.c+'</div>':'')+'</aside></article>';
+}
+$('#fid-list').innerHTML=FID.map(function(p,i){return prod(p,i,false)}).join('');
+$('#fin-list').innerHTML=FIN.map(function(p,i){return prod(p,i,true)}).join('');
+$$('#fid-list .prod:last-child,#fin-list .prod:last-child').forEach(function(e){e.style.borderBottom='0'});
+function post(p){return '<article class="post"><figure class="ph" style="--r:16/10"><figcaption><b>Imagen</b><span>Portada · 16:10 · 1200×750</span></figcaption></figure><p class="mono"><span>'+p[0]+'</span><span>Próximamente</span></p><h3>'+p[1]+'</h3><p>'+p[2]+'</p></article>'}
+$('#posts').innerHTML=POSTS.map(post).join('');
+$('#posts-home').innerHTML=POSTS.slice(0,3).map(post).join('');
+function faq(list){return list.map(function(f,i){return '<details data-c="'+f[0]+'"><summary><span class="mono">'+(i<9?'0':'')+(i+1)+'</span><span>'+f[1]+'</span><i>+</i></summary><div>'+f[2]+'</div></details>'}).join('')}
+$('#faq-all').innerHTML=faq(FAQ);
+$('#faq-home').innerHTML=faq([FAQ[1],FAQ[3],FAQ[9],FAQ[11]]);
+var cats=['Todas'].concat(FAQ.map(function(f){return f[0]}).filter(function(c,i,a){return a.indexOf(c)===i}));
+$('#chips').innerHTML=cats.map(function(c,i){return '<button type="button" aria-pressed="'+(i===0)+'">'+c+'</button>'}).join('');
+$('#chips').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+ $$('#chips button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});
+ $$('#faq-all details').forEach(function(d){d.hidden=!(b.textContent==='Todas'||d.dataset.c===b.textContent)})});
+$('#allies').innerHTML=ALLIES.map(function(a,i){return '<div><div><p class="mono" style="color:var(--soft);margin-bottom:10px">'+(i<9?'0':'')+(i+1)+'</p><h3>'+a[0]+'</h3></div><p>'+a[1]+'</p></div>'}).join('');
+
+/* ---------- Vistas por hash ---------- */
+var VIEWS=['inicio','fideicomisos','creditos','clientes','socios','blog','faq','transparencia','contacto'];
+var nav=$('#nav'),burger=$('#burger');
+function show(){
+ var h=(location.hash||'').slice(1); if(VIEWS.indexOf(h)<0)h='inicio';
+ VIEWS.forEach(function(v){$('#v-'+v).hidden=(v!==h)});
+ $$('#menu a').forEach(function(a){if(a.getAttribute('href')==='#'+h)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+ nav.classList.remove('open');burger.setAttribute('aria-expanded','false');burger.textContent='Menú';
+ window.scrollTo(0,0); observe();
+}
+window.addEventListener('hashchange',show);
+burger.addEventListener('click',function(){var o=nav.classList.toggle('open');burger.setAttribute('aria-expanded',o);burger.textContent=o?'Cerrar':'Menú'});
+
+/* ---------- Aparición al hacer scroll ---------- */
+var io=('IntersectionObserver' in window)?new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15}):null;
+function observe(){$$('.rv,#fear').forEach(function(el){if(io)io.observe(el);else el.classList.add('in')})}
+show();
+
+/* ---------- Formularios ---------- */
+$('#cf').addEventListener('submit',function(e){e.preventDefault();var f=e.target,o=$('#cf-out');
+ var t='Hola DAG SF. Soy '+f.n.value.trim()+(f.e.value.trim()?' ('+f.e.value.trim()+')':'')+'. Perfil: '+f.r.value+'. '+f.m.value.trim();
+ o.hidden=false;
+ o.innerHTML='<p style="margin-bottom:10px"><b>Tu mensaje está listo.</b> Todavía no se ha enviado nada: este formulario aún no está conectado.</p><p><a href="https://wa.me/523349423012?text='+encodeURIComponent(t)+'" target="_blank" rel="noopener">Enviarlo por WhatsApp →</a></p>';
+});
+$('#news').addEventListener('submit',function(e){e.preventDefault();$('#news-msg').textContent='Registro pendiente: el boletín aún no está conectado. Tu correo no se guardó.'});
+})();
+</script>
+
+</body></html>

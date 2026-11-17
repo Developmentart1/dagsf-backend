@@ -52,6 +52,24 @@ docker compose exec backend node scripts/seed.js
 | GET | `/api/fideicomisos` | Listar fideicomisos |
 | POST | `/api/fideicomisos` | Crear fideicomiso |
 | POST | `/api/upload` | Subir archivo a MinIO |
+| POST | `/api/leads` | **Publico**: solicitud desde los micrositios (contacto / newsletter) |
+| GET | `/api/leads` | Listar solicitudes (interno, requiere token) |
+| PATCH | `/api/leads/:id` | Actualizar estado/notas de una solicitud |
+| GET | `/api/health` | Estado del backend (via Nginx) |
+
+## Frontend (micrositios)
+
+Los tres micrositios viven en `frontend/` y ya consumen la API:
+
+| Archivo | Descripcion |
+|---------|-------------|
+| `frontend/index.html` | Hub principal DAG SF |
+| `frontend/creditos.html` | Micrositio de creditos |
+| `frontend/fideicomisos.html` | Micrositio de fideicomisos |
+| `frontend/api.js` | Cliente REST (token en `localStorage`) |
+| `frontend/lead-form.js` | Conecta los formularios con `POST /api/leads` |
+
+Nginx sirve `frontend/` en `/` y reenvia `/api/` al backend en el mismo origen, asi que no hay CORS ni URLs absolutas.
 
 ## Estructura del backend
 
@@ -68,6 +86,7 @@ backend/
 │   │   ├── clientes.js      # CRUD clientes
 │   │   ├── creditos.js      # Workflow de créditos
 │   │   ├── fideicomisos.js  # CRUD fideicomisos
+│   │   ├── leads.js         # Solicitudes públicas de los micrositios
 │   │   └── upload.js        # Subida a MinIO
 │   └── server.js            # Entry point
 ├── scripts/

@@ -12,6 +12,7 @@ const clientesRoutes = require('./routes/clientes');
 const creditosRoutes = require('./routes/creditos');
 const fideicomisosRoutes = require('./routes/fideicomisos');
 const uploadRoutes = require('./routes/upload');
+const leadsRoutes = require('./routes/leads');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -43,7 +44,7 @@ app.use(express.urlencoded({ extended: true }));
 // ------------------------------------------------------------------
 // Health check
 // ------------------------------------------------------------------
-app.get('/health', async (req, res) => {
+const healthHandler = async (req, res) => {
   try {
     await db.query('SELECT 1');
     await redis.ping();
@@ -51,7 +52,11 @@ app.get('/health', async (req, res) => {
   } catch (err) {
     res.status(503).json({ status: 'error', message: err.message });
   }
-});
+};
+
+// Responde en /health (acceso directo al backend) y en /api/health (via Nginx)
+app.get('/health', healthHandler);
+app.get('/api/health', healthHandler);
 
 // ------------------------------------------------------------------
 // Rutas API
@@ -61,6 +66,7 @@ app.use('/api/clientes', clientesRoutes);
 app.use('/api/creditos', creditosRoutes);
 app.use('/api/fideicomisos', fideicomisosRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/leads', leadsRoutes);
 
 // ------------------------------------------------------------------
 // Error handler global

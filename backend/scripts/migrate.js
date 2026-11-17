@@ -151,6 +151,26 @@ const schemas = [
   );`,
 
   // ------------------------------------------------------------------
+  // Leads (solicitudes desde los micrositios)
+  // ------------------------------------------------------------------
+  `CREATE TABLE IF NOT EXISTS leads (
+    id SERIAL PRIMARY KEY,
+    tipo VARCHAR(20) NOT NULL DEFAULT 'lead' CHECK (tipo IN ('lead', 'newsletter')),
+    nombre VARCHAR(500) NOT NULL,
+    empresa VARCHAR(500),
+    email VARCHAR(255),
+    telefono VARCHAR(50),
+    necesidad VARCHAR(255),
+    producto VARCHAR(100),
+    mensaje TEXT,
+    origen VARCHAR(100),
+    status VARCHAR(30) NOT NULL DEFAULT 'nuevo' CHECK (status IN ('nuevo', 'en_revision', 'atendido', 'descartado')),
+    notas TEXT,
+    creado_en TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    actualizado_en TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  );`,
+
+  // ------------------------------------------------------------------
   // Índices
   // ------------------------------------------------------------------
   `CREATE INDEX IF NOT EXISTS idx_clientes_rfc ON clientes(rfc);`,

@@ -13,6 +13,7 @@ const creditosRoutes = require('./routes/creditos');
 const fideicomisosRoutes = require('./routes/fideicomisos');
 const uploadRoutes = require('./routes/upload');
 const leadsRoutes = require('./routes/leads');
+const arcoRoutes = require('./routes/arco');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -67,6 +68,7 @@ app.use('/api/creditos', creditosRoutes);
 app.use('/api/fideicomisos', fideicomisosRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/leads', leadsRoutes);
+app.use('/api/arco', arcoRoutes);
 
 // ------------------------------------------------------------------
 // Error handler global

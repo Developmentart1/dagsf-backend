@@ -171,6 +171,32 @@ const schemas = [
   );`,
 
   // ------------------------------------------------------------------
+  // Solicitudes ARCO (datos personales / derechos de titulares)
+  // ------------------------------------------------------------------
+  `CREATE TABLE IF NOT EXISTS solicitudes_arco (
+    id SERIAL PRIMARY KEY,
+    folio VARCHAR(40) UNIQUE NOT NULL,
+    tipo_derecho VARCHAR(20) NOT NULL CHECK (tipo_derecho IN ('acceso', 'rectificacion', 'cancelacion', 'oposicion')),
+    nombre VARCHAR(500) NOT NULL,
+    correo VARCHAR(255) NOT NULL,
+    telefono VARCHAR(50),
+    domicilio TEXT NOT NULL,
+    id_tipo VARCHAR(100) NOT NULL,
+    id_numero VARCHAR(200) NOT NULL,
+    representante TEXT,
+    medio_respuesta VARCHAR(200) NOT NULL,
+    lugar VARCHAR(200) NOT NULL,
+    fecha_solicitud VARCHAR(30) NOT NULL,
+    campos JSONB NOT NULL DEFAULT '{}'::jsonb,
+    estado VARCHAR(30) NOT NULL DEFAULT 'recibida' CHECK (estado IN ('recibida', 'en_revision', 'respondida', 'rechazada')),
+    bus_estado VARCHAR(20) NOT NULL DEFAULT 'pendiente' CHECK (bus_estado IN ('pendiente', 'publicado', 'error')),
+    bus_error TEXT,
+    bus_publicado_en TIMESTAMPTZ,
+    creado_en TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    actualizado_en TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  );`,
+
+  // ------------------------------------------------------------------
   // Índices
   // ------------------------------------------------------------------
   `CREATE INDEX IF NOT EXISTS idx_clientes_rfc ON clientes(rfc);`,

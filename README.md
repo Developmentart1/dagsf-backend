@@ -53,6 +53,8 @@ docker compose exec backend node scripts/seed.js
 | POST | `/api/fideicomisos` | Crear fideicomiso |
 | POST | `/api/upload` | Subir archivo a MinIO |
 | POST | `/api/leads` | **Publico**: solicitud desde los micrositios (contacto / newsletter) |
+| POST | `/api/arco` | **Publico**: recepción de solicitudes de derechos ARCO |
+| GET | `/api/arco` | Listar solicitudes ARCO (interno, requiere token) |
 | GET | `/api/leads` | Listar solicitudes (interno, requiere token) |
 | PATCH | `/api/leads/:id` | Actualizar estado/notas de una solicitud |
 | GET | `/api/health` | Estado del backend (via Nginx) |
